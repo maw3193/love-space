@@ -65,6 +65,13 @@ local shiptemplate = {
 shiptemplate.__index = shiptemplate -- look up in shiptemplate
 
 function ship.newship(x, y, mass, radius, image, colour, team) --Full constructor, assuming they're all circles.
+	-- parameter default values
+	x = x or 0; y = y or 0
+	mass = mass or 1
+	radius = radius or 16
+	image = image or "art/ship32.png"
+	colour = colour or ui.white
+	team = team or 1
 	local tempship = setmetatable({}, shiptemplate)
 	local spaceangdamp = 1
 	local spacelindamp = 1
@@ -92,10 +99,5 @@ function ship.newship(x, y, mass, radius, image, colour, team) --Full constructo
 	return tempship
 end
 
-
-
-function ship.defaultship() --default
-	return ship.newship(0,0,1, 16, "art/ship32.png", ui.white, 1)
-end
 
 return ship

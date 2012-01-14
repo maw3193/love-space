@@ -55,7 +55,7 @@ function love.load()
 	game.rightwall:setFilterData(game.collgroups.walls, game.collgroups.ships, 0)
 	
 
-	game.things.ship1 = ship.defaultship()
+	game.things.ship1 = ship.newship()
 	table.insert(game.things, ship.newship(50,50,1,16,"art/ship32.png", ui.red, 2))
 	table.insert(game.things, ship.newship(-50,50,1,16,"art/ship32.png", ui.white, 2))
 	table.insert(game.things, ship.newship(50,-50,1,16,"art/ship32.png", ui.green, 2))
