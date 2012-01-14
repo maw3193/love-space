@@ -66,6 +66,9 @@ local shiptemplate = {
 
 function ship.newship(x, y, mass, radius, image, colour) --Full constructor, assuming they're all circles.
 	local tempship = {}
+	for k, v in pairs(shiptemplate) do
+		tempship[k] = v
+	end
 	local spaceangdamp = 1
 	local spacelindamp = 1
 	tempship.hp = tempship.hpmax
