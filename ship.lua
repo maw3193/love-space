@@ -61,14 +61,11 @@ local shiptemplate = {
 			self.body:applyForce(1000,0)
 		end
 	end
-
 }
+shiptemplate.__index = shiptemplate -- look up in shiptemplate
 
 function ship.newship(x, y, mass, radius, image, colour) --Full constructor, assuming they're all circles.
-	local tempship = {}
-	for k, v in pairs(shiptemplate) do
-		tempship[k] = v
-	end
+	local tempship = setmetatable({}, shiptemplate)
 	local spaceangdamp = 1
 	local spacelindamp = 1
 	tempship.hp = tempship.hpmax
