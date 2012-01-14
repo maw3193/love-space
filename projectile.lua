@@ -5,12 +5,12 @@ local projectile_template = {
 	isalive = true,
 	thrust = 0.1,
 	damagemult = 10,
-	function temp:draw()
+	draw = function(self)
 		local pos = game.cam:cameraCoords(self.body:getX(), self.body:getY())
 		love.graphics.setColor(temp.colour)
 		love.graphics.draw(self.image, pos.x, pos.y, self.body:getAngle(), game.cam.zoom*self.imagescale, game.cam.zoom*self.imagescale, self.image:getWidth()/2, self.image:getHeight()/2)
 	end,
-	function temp:update(dt)
+	update = function(self, dt)
 		if self.body:isFrozen() then
 			self.isalive = false
 		end
