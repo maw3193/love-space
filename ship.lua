@@ -1,58 +1,35 @@
 --Builds the ship prototype
 local ship = {}
 
-function ship.newship(x, y, mass, radius, image, colour) --Full constructor, assuming they're all circles.
-	local tempship = {}
-	local spaceangdamp = 1
-	local spacelindamp = 1
-	tempship.thrust = 100
-	tempship.torque = 100
-	tempship.hpmax = 100
-	tempship.hp = tempship.hpmax
-	tempship.isship = true
-	tempship.isalive = true
-	tempship.radius = radius
-	--tempship.mass = mass
-	tempship.cx = radius
-	tempship.cy = radius
-	tempship.image = love.graphics.newImage(image)
-	tempship.imagescale = 2*radius/tempship.image:getWidth()
-	tempship.colour = colour
-	tempship.body = love.physics.newBody(game.world, x, y, mass, mass)
-	tempship.body:setLinearDamping(spacelindamp)
-	tempship.body:setAngularDamping(spaceangdamp)
-	tempship.shape = love.physics.newCircleShape(tempship.body,0,0,tempship.radius)
-	tempship.shape:setData(tempship)
-	tempship.shape:setFilterData(game.collgroups.ships, --Classifies as a ship
-					game.collgroups.walls + game.collgroups.ships + game.collgroups.projectiles, --Ships collide with walls,ships,bullet
-					-1) --collision group is the player number. -ve means no collision within that group.
-	tempship.order = {}
-	tempship.order.func = nil
-	tempship.order.data = nil
-	function tempship:draw() --Draws the ship to the display (assuming global access to game.
+local shiptemplate = {
+	thrust = 100,
+	torque = 100,
+	hpmax = 100,
+	isship = true,
+	isalive = true,
+	--Draws the ship to the display (assuming global access to game)
+	draw = function(self) 
 		local pos = game.cam:cameraCoords(self.body:getX(), self.body:getY())
-		love.graphics.setColor(tempship.colour)
+		love.graphics.setColor(self.colour)
 		love.graphics.draw(self.image, pos.x, pos.y, self.body:getAngle(), game.cam.zoom * self.imagescale, game.cam.zoom * self.imagescale, self.image:getWidth()/2, self.image:getHeight()/2)
-	end
-	function tempship:drawselected() --Draws the selection 
+	end,
+	drawselected = function(self) --Draws the selection 
 		local pos = game.cam:cameraCoords(self.body:getX(), self.body:getY())
 		love.graphics.setColor(game.selectedcolour)
-		love.graphics.rectangle("line", pos.x - tempship.cx*game.cam.zoom, pos.y - tempship.cy*game.cam.zoom, tempship.radius*2*game.cam.zoom, tempship.radius*2*game.cam.zoom)
+		love.graphics.rectangle("line", pos.x - self.cx*game.cam.zoom, pos.y - self.cy*game.cam.zoom, self.radius*2*game.cam.zoom, self.radius*2*game.cam.zoom)
 		self:draworder()
 		love.graphics.setColor(ui.red)
-		love.graphics.rectangle("fill", pos.x - tempship.cx*game.cam.zoom,
-						pos.y + tempship.cy*game.cam.zoom,
-						tempship.radius*2*game.cam.zoom,
+		love.graphics.rectangle("fill", pos.x - self.cx*game.cam.zoom,
+						pos.y + self.cy*game.cam.zoom,
+						self.radius*2*game.cam.zoom,
 						ui.healthbarheight)
 		love.graphics.setColor(ui.green)
-		love.graphics.rectangle("fill", pos.x - tempship.cx*game.cam.zoom,
-						pos.y + tempship.cy*game.cam.zoom,
-						tempship.radius*2*game.cam.zoom*self.hp/self.hpmax,
+		love.graphics.rectangle("fill", pos.x - self.cx*game.cam.zoom,
+						pos.y + self.cy*game.cam.zoom,
+						self.radius*2*game.cam.zoom*self.hp/self.hpmax,
 						ui.healthbarheight)
-
-		
-	end
-	function tempship:draworder()
+	end,
+	draworder = function(self)
 		local pos = game.cam:cameraCoords(self.body:getX(), self.body:getY())
 		local targpos = {}
 		if self.order.data then
@@ -64,9 +41,8 @@ function ship.newship(x, y, mass, radius, image, colour) --Full constructor, ass
 			love.graphics.line(pos.x, pos.y, targpos.x, targpos.y)
 			self.order.data:draw()
 		end
-	end
-
-	function tempship:update(dt)
+	end,
+	update = function(self, dt)
 		if self.order.func then --Processing of orders
 			self.order.func(dt, self, self.order.data)
 		end
@@ -85,6 +61,32 @@ function ship.newship(x, y, mass, radius, image, colour) --Full constructor, ass
 			self.body:applyForce(1000,0)
 		end
 	end
+}
+shiptemplate.__index = shiptemplate -- look up in shiptemplate
+
+function ship.newship(x, y, mass, radius, image, colour) --Full constructor, assuming they're all circles.
+	local tempship = setmetatable({}, shiptemplate)
+	local spaceangdamp = 1
+	local spacelindamp = 1
+	tempship.hp = tempship.hpmax
+	tempship.radius = radius
+	--tempship.mass = mass
+	tempship.cx = radius
+	tempship.cy = radius
+	tempship.image = love.graphics.newImage(image)
+	tempship.imagescale = 2*radius/tempship.image:getWidth()
+	tempship.colour = colour
+	tempship.body = love.physics.newBody(game.world, x, y, mass, mass)
+	tempship.body:setLinearDamping(spacelindamp)
+	tempship.body:setAngularDamping(spaceangdamp)
+	tempship.shape = love.physics.newCircleShape(tempship.body,0,0,tempship.radius)
+	tempship.shape:setData(tempship)
+	tempship.shape:setFilterData(game.collgroups.ships, --Classifies as a ship
+					game.collgroups.walls + game.collgroups.ships + game.collgroups.projectiles, --Ships collide with walls,ships,bullet
+					-1) --collision group is the player number. -ve means no collision within that group.
+	tempship.order = {}
+	tempship.order.func = nil
+	tempship.order.data = nil
 
 	return tempship
 end
