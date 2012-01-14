@@ -1,12 +1,26 @@
 local projectile = {}
 
-function projectile.newprojectile(x, y, vx, vy, angle, mass, radius, image, colour, team)
-	local temp = {}
+local projectile_template = {
+	isprojectile = true,
+	isalive = true,
+	thrust = 0.1,
+	damagemult = 10,
+	function temp:draw()
+		local pos = game.cam:cameraCoords(self.body:getX(), self.body:getY())
+		love.graphics.setColor(temp.colour)
+		love.graphics.draw(self.image, pos.x, pos.y, self.body:getAngle(), game.cam.zoom*self.imagescale, game.cam.zoom*self.imagescale, self.image:getWidth()/2, self.image:getHeight()/2)
+	end,
+	function temp:update(dt)
+		if self.body:isFrozen() then
+			self.isalive = false
+		end
+	end,
+}
+projectile_template.__index = projectile_template
 
-	temp.isprojectile = true
-	temp.isalive = true
-	temp.thrust = 0.1
-	temp.damagemult = 10
+function projectile.newprojectile(x, y, vx, vy, angle, mass, radius, image, colour, team)
+	local temp = setmetatable({}, projectile_template)
+
 	temp.cx = radius
 	temp.cy = radius
 	temp.image = love.graphics.newImage(image)
@@ -21,18 +35,6 @@ function projectile.newprojectile(x, y, vx, vy, angle, mass, radius, image, colo
 	temp.body:setAngle(angle)
 	temp.body:setLinearVelocity(vx, vy)
 	temp.body:applyImpulse(math.cos(angle)*temp.thrust, math.sin(angle)*temp.thrust)
-
-	function temp:draw()
-		local pos = game.cam:cameraCoords(self.body:getX(), self.body:getY())
-		love.graphics.setColor(temp.colour)
-		love.graphics.draw(self.image, pos.x, pos.y, self.body:getAngle(), game.cam.zoom*self.imagescale, game.cam.zoom*self.imagescale, self.image:getWidth()/2, self.image:getHeight()/2)
-	end
-
-	function temp:update(dt)
-		if self.body:isFrozen() then
-			self.isalive = false
-		end
-	end
 
 	return temp
 end
