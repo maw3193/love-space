@@ -19,13 +19,13 @@ local shiptemplate = {
 		love.graphics.rectangle("line", pos.x - self.cx*game.cam.zoom, pos.y - self.cy*game.cam.zoom, self.radius*2*game.cam.zoom, self.radius*2*game.cam.zoom)
 		self:draworder()
 		love.graphics.setColor(ui.red)
-		love.graphics.rectangle("fill", pos.x - tempship.cx*game.cam.zoom,
-						pos.y + tempship.cy*game.cam.zoom,
+		love.graphics.rectangle("fill", pos.x - self.cx*game.cam.zoom,
+						pos.y + self.cy*game.cam.zoom,
 						self.radius*2*game.cam.zoom,
 						ui.healthbarheight)
 		love.graphics.setColor(ui.green)
-		love.graphics.rectangle("fill", pos.x - tempship.cx*game.cam.zoom,
-						pos.y + tempship.cy*game.cam.zoom,
+		love.graphics.rectangle("fill", pos.x - self.cx*game.cam.zoom,
+						pos.y + self.cy*game.cam.zoom,
 						self.radius*2*game.cam.zoom*self.hp/self.hpmax,
 						ui.healthbarheight)
 	end,
