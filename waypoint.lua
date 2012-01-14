@@ -13,7 +13,7 @@ function waypoint.newwaypoint(x,y)
 		love.graphics.line(pos.x - temp.radius*game.cam.zoom, pos.y, pos.x + temp.radius*game.cam.zoom, pos.y)--horizontal part of cross
 		love.graphics.line(pos.x, pos.y - temp.radius*game.cam.zoom, pos.x, pos.y + temp.radius*game.cam.zoom)--vertical part of cross
 	end
-	print("created waypoint")
+	--print("created waypoint")
 return temp
 end
 return waypoint

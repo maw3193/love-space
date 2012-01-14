@@ -1,19 +1,13 @@
 function love.load()
+	ui = require"ui.lua"
 	camera = require"lib/camera"
 	vector = require"lib/vector"
 	local ship = require "ship.lua"
 	local waypoint = require "waypoint.lua"
 	local projectile = require "projectile.lua"
+	local panels = require "panels.lua"
 	require"inputcallbacks.lua"
 	love.graphics.setLineWidth(1.5)
-
-	ui = {}
-	ui.red = {255,0,0,255}
-	ui.green = {0,255,0,255}
-	ui.blue = {0,0,255,255}
-	ui.white = {255,255,255,255}
-	ui.black = {0,0,0,255}
-	ui.healthbarheight = 2
 
 	game = {}
 	game.things = {}
@@ -62,14 +56,21 @@ function love.load()
 	
 
 	game.things.ship1 = ship.defaultship()
-	table.insert(game.things, ship.newship(50,50,0.1,8,"art/ship32.png", ui.red))
-	table.insert(game.things, ship.newship(-50,50,0.1,8,"art/ship32.png", ui.white))
-	table.insert(game.things, ship.newship(50,-50,0.1,8,"art/ship32.png", ui.green))
-	table.insert(game.things, ship.newship(-50,-50,0.1,8,"art/ship32.png", ui.blue))
+	table.insert(game.things, ship.newship(50,50,1,16,"art/ship32.png", ui.red, 2))
+	table.insert(game.things, ship.newship(-50,50,1,16,"art/ship32.png", ui.white, 2))
+	table.insert(game.things, ship.newship(50,-50,1,16,"art/ship32.png", ui.green, 2))
+	table.insert(game.things, ship.newship(-50,-50,1,16,"art/ship32.png", ui.blue, 2))
 	game.cam = camera(vector(0,0),1,0)
 	game.cam:attach()
-	game.collisiontext = ""
 
+	table.insert(ui.panels, panels.newpanel())
+
+	--[[
+	local modes = love.graphics.getModes()
+	for k,v in pairs(modes) do
+		print("w=" .. v.width .. "  h=" .. v.height)
+	end
+	--]]
 end
 
 function love.draw()
@@ -84,21 +85,53 @@ function love.draw()
 	end
 
 	for k,v in pairs(game.things) do
-		v:draw()
+		if v.isalive then
+			v:draw()
+		end
 	end
 	for k,v in pairs(game.selected) do
 		v:drawselected()
 	end
+
+	--DRAW UI LAST
+	for k,v in pairs(ui.panels) do
+		v:draw()
+	end
 end
 
 function love.update(dt)
+	local camspeed = 100
+	local thrust = 1000	
+	local turnspeed = 1000
+
+	if love.keyboard.isDown("left") then
+		game.cam:move(-camspeed*dt, 0)
+	end
+	if love.keyboard.isDown("right") then
+		game.cam:move(camspeed*dt,0)
+	end
+	if love.keyboard.isDown("up") then
+		game.cam:move(0,-camspeed*dt)
+	end
+	if love.keyboard.isDown("down") then
+		game.cam:move(0,camspeed*dt)
+	end
+	if love.keyboard.isDown("kp+") then
+		game.cam.zoom = 2
+	end
+	if love.keyboard.isDown("kp-") then
+		game.cam.zoom = 0.5
+	end
+	if love.keyboard.isDown("kpenter") then
+		game.cam.zoom = 1
+	end
+
+	for k,v in pairs(ui.panels) do
+		v:update(dt)
+	end
+
 	if game.paused == false then
-
 		game.world:update(dt)
-		local camspeed = 100
-		local thrust = 1000	
-		local turnspeed = 1000
-
 		for k,v in pairs(game.things) do
 			if v.isalive then
 				v:update(dt)
@@ -107,27 +140,6 @@ function love.update(dt)
 			end
 		end
 
-		if love.keyboard.isDown("left") then
-			game.cam:move(-camspeed*dt, 0)
-		end
-		if love.keyboard.isDown("right") then
-			game.cam:move(camspeed*dt,0)
-		end
-		if love.keyboard.isDown("up") then
-			game.cam:move(0,-camspeed*dt)
-		end
-		if love.keyboard.isDown("down") then
-			game.cam:move(0,camspeed*dt)
-		end
-		if love.keyboard.isDown("kp+") then
-			game.cam.zoom = 2
-		end
-		if love.keyboard.isDown("kp-") then
-			game.cam.zoom = 0.5
-		end
-		if love.keyboard.isDown("kpenter") then
-			game.cam.zoom = 1
-		end
 		if love.keyboard.isDown("w") then
 			game.things.ship1.body:applyForce(thrust * dt * math.cos(game.things.ship1.body:getAngle()), thrust * dt * math.sin(game.things.ship1.body:getAngle()))
 		end

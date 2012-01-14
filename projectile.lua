@@ -1,11 +1,12 @@
 local projectile = {}
 
-function projectile.newprojectile(x, y, vx, vy, angle, mass, radius, image, colour)
+function projectile.newprojectile(x, y, vx, vy, angle, mass, radius, image, colour, team)
 	local temp = {}
 
 	temp.isprojectile = true
 	temp.isalive = true
 	temp.thrust = 0.1
+	temp.damagemult = 10
 	temp.cx = radius
 	temp.cy = radius
 	temp.image = love.graphics.newImage(image)
@@ -15,7 +16,7 @@ function projectile.newprojectile(x, y, vx, vy, angle, mass, radius, image, colo
 	temp.body:setBullet(true)
 	temp.shape = love.physics.newCircleShape(temp.body, 0, 0, radius)
 	temp.shape:setData(temp)
-	temp.shape:setFilterData(game.collgroups.projectiles, game.collgroups.ships + game.collgroups.projectiles, 1)
+	temp.shape:setFilterData(game.collgroups.projectiles, game.collgroups.ships + game.collgroups.projectiles, -team)
 
 	temp.body:setAngle(angle)
 	temp.body:setLinearVelocity(vx, vy)
@@ -27,8 +28,10 @@ function projectile.newprojectile(x, y, vx, vy, angle, mass, radius, image, colo
 		love.graphics.draw(self.image, pos.x, pos.y, self.body:getAngle(), game.cam.zoom*self.imagescale, game.cam.zoom*self.imagescale, self.image:getWidth()/2, self.image:getHeight()/2)
 	end
 
-	function temp:update()
-		
+	function temp:update(dt)
+		if self.body:isFrozen() then
+			self.isalive = false
+		end
 	end
 
 	return temp

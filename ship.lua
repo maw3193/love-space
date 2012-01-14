@@ -57,14 +57,14 @@ local shiptemplate = {
 					if v == self then table.remove(game.selected, k) end
 				end
 			end
-			self.body:setX(game.worldmaxx + game.wallthickness + game.worldemptyoutside/2)
-			self.body:applyForce(1000,0)
+			self.body:setX(game.worldmaxx + game.wallthickness + game.worldemptyoutside/2) --move object outside the walls of the world
+			self.body:applyForce(1000,0) --Push it out of the world
 		end
 	end
 }
 shiptemplate.__index = shiptemplate -- look up in shiptemplate
 
-function ship.newship(x, y, mass, radius, image, colour) --Full constructor, assuming they're all circles.
+function ship.newship(x, y, mass, radius, image, colour, team) --Full constructor, assuming they're all circles.
 	local tempship = setmetatable({}, shiptemplate)
 	local spaceangdamp = 1
 	local spacelindamp = 1
@@ -73,6 +73,7 @@ function ship.newship(x, y, mass, radius, image, colour) --Full constructor, ass
 	--tempship.mass = mass
 	tempship.cx = radius
 	tempship.cy = radius
+	tempship.team = team
 	tempship.image = love.graphics.newImage(image)
 	tempship.imagescale = 2*radius/tempship.image:getWidth()
 	tempship.colour = colour
@@ -83,7 +84,7 @@ function ship.newship(x, y, mass, radius, image, colour) --Full constructor, ass
 	tempship.shape:setData(tempship)
 	tempship.shape:setFilterData(game.collgroups.ships, --Classifies as a ship
 					game.collgroups.walls + game.collgroups.ships + game.collgroups.projectiles, --Ships collide with walls,ships,bullet
-					-1) --collision group is the player number. -ve means no collision within that group.
+					-team) --collision group is the player number. -ve means no collision within that group.
 	tempship.order = {}
 	tempship.order.func = nil
 	tempship.order.data = nil
@@ -94,7 +95,7 @@ end
 
 
 function ship.defaultship() --default
-	return ship.newship(0,0,1, 16, "art/ship32.png", {255,255,255,255})
+	return ship.newship(0,0,1, 16, "art/ship32.png", ui.white, 1)
 end
 
 return ship
