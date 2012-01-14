@@ -51,11 +51,11 @@ paneltemplate.__index = paneltemplate -- look up in template
 
 function panels.newpanel(x, y, w, h, col)
 	local temp = setmetatable({}, paneltemplate)
-	if x then temp.x = x end
-	if y then temp.y = y end
-	if w then temp.width = w end
-	if h then temp.height = h end
-	if col then temp.colour = col end
+	temp.x = x
+	temp.y = y
+	temp.width = w
+	height = h
+	colour = col
 
 	return temp
 end
