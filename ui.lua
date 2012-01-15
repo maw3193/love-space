@@ -10,6 +10,12 @@ local ui = {
 	clickedpanel = false,
 	activeelement = nil,
 	elements = {},
+	--[[
+	NOTE ON PLANNED INPUT HANDLING: On mouse down, find out which element is clicked, record which element that is and tell the element to react.
+	Each element has an update function, where it handles behaviour between mouse pressed, and mouse released.
+	When mouse is released, send a mouse released signal to the active element only (because only one thing can be clicked at once)
+
+	--]]
 	clickdown = function(self, x, y, button)
 		local endpoint = table.maxn(self.elements)
 		local current = endpoint
