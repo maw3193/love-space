@@ -63,7 +63,8 @@ function love.load()
 	game.cam = camera(vector(0,0),1,0)
 	game.cam:attach()
 
-	table.insert(ui.panels, panels.newpanel())
+	table.insert(ui.elements, game)
+	table.insert(ui.elements, panels.newpanel())
 
 	--[[
 	local modes = love.graphics.getModes()
@@ -71,35 +72,45 @@ function love.load()
 		print("w=" .. v.width .. "  h=" .. v.height)
 	end
 	--]]
-end
-
-function love.draw()
-	local boundbegin = game.cam:cameraCoords(game.worldminx,game.worldminy)
-	local boundend = game.cam:cameraCoords(game.worldmaxx,game.worldmaxy)
-	love.graphics.setColor(game.wallcolour)
-	love.graphics.line(boundbegin.x, boundbegin.y, boundend.x, boundbegin.y, boundend.x, boundend.y, boundbegin.x, boundend.y, boundbegin.x, boundbegin.y) --square loop
-
-	if game.mousepressed then 
-		love.graphics.setColor(game.selboxcolour)
-		love.graphics.rectangle("line", game.selstartx, game.selstarty, love.mouse.getX() - game.selstartx, love.mouse.getY() - game.selstarty)
-	end
-
-	for k,v in pairs(game.things) do
-		if v.isalive then
-			v:draw()
+	function game:drawthings()
+		for k,v in pairs(self.things) do
+			if v.isalive then
+				v:draw()
+			end
 		end
 	end
-	for k,v in pairs(game.selected) do
-		v:drawselected()
+	function game:drawselected()
+		for k,v in pairs(self.selected) do
+			v:drawselected()
+		end
+	end
+	function game:drawwalls()
+		local boundbegin = game.cam:cameraCoords(game.worldminx,game.worldminy)
+		local boundend = game.cam:cameraCoords(game.worldmaxx,game.worldmaxy)
+		love.graphics.setColor(game.wallcolour)
+		love.graphics.line(boundbegin.x, boundbegin.y, boundend.x, boundbegin.y, boundend.x, boundend.y, boundbegin.x, boundend.y, boundbegin.x, boundbegin.y) --square loop	
+	end
+	function game:draw()
+		game:drawwalls()
+		game:drawthings()
+		game:drawselected()
+	end
+	function game:clickup(x, y, button)
+		
+	end
+	function game:getcollide(x,y)
+		return true
 	end
 
-	--DRAW UI LAST
-	for k,v in pairs(ui.panels) do
-		v:draw()
-	end
+end
+
+
+function love.draw()
+	ui:draw()
 end
 
 function love.update(dt)
+	ui:update(dt)
 	local camspeed = 100
 	local thrust = 1000	
 	local turnspeed = 1000
@@ -126,9 +137,7 @@ function love.update(dt)
 		game.cam.zoom = 1
 	end
 
-	for k,v in pairs(ui.panels) do
-		v:update(dt)
-	end
+	ui:update(dt)
 
 	if game.paused == false then
 		game.world:update(dt)

@@ -18,6 +18,8 @@ function love.keyreleased(key)
 end
 
 function love.mousepressed(x, y, button)
+	ui:clickdown(x,y,button)
+--[[
 	if button == "l" then
 		for k,v in pairs(ui.elements) do
 			if v:getcollide(x,y) then 
@@ -31,9 +33,12 @@ function love.mousepressed(x, y, button)
 			game.selstarty = y
 		end
 	end
+--]]
 end
 
 function love.mousereleased(x,y,button)
+	ui:clickup(x, y, button)
+--[[
 	if button == "l" then --Start left click behaviour
 		if clickedpanel == false then
 			game.selected = nil
@@ -128,6 +133,7 @@ function love.mousereleased(x,y,button)
 			end
 		end
 	end
+--]]
 end
 
 function add(a, b, coll)

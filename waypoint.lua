@@ -1,9 +1,10 @@
+local ui = require"ui.lua"
 local waypoint = {}
 
 local waypoint_template = {
 	iswaypoint = true,
 	radius = 2,
-	colour = {0,255,0,127}
+	colour = {0,255,0,ui.transparency},
 	draw = function(self)
 		local pos = game.cam:cameraCoords(self.x, self.y)
 		love.graphics.setColor(temp.colour)

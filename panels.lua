@@ -23,6 +23,9 @@ local paneltemplate = {
 			return false
 		end
 	end,
+	clickdown = function(self, x, y, button)
+		self:startgrabbed(x,y)
+	end,
 	startgrabbed = function(self, x, y)
 		self.isgrabbed = true
 		self.grabbedx = x - self.x
