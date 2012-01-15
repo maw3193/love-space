@@ -9,7 +9,16 @@ local ui = {}
 	panelcol = {127,127,127,127},
 	healthbarheight = 2,
 	clickedpanel = false,
-	panels = {},
+	elements = {},
+	ui.clickdown = function(self, x, y, button)
+
+	end,
+	ui.clickup = function(self, x, y, button)
+
+	end,
+	ui.update(self, dt)
+
+	end,
 }
 
 return ui

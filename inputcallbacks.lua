@@ -19,7 +19,7 @@ end
 
 function love.mousepressed(x, y, button)
 	if button == "l" then
-		for k,v in pairs(ui.panels) do
+		for k,v in pairs(ui.elements) do
 			if v:getcollide(x,y) then 
 				v:startgrabbed(x,y) 
 				clickedpanel = true
@@ -88,7 +88,7 @@ function love.mousereleased(x,y,button)
 			end
 		else
 			clickedpanel = false
-			for k,v in pairs(ui.panels) do
+			for k,v in pairs(ui.elements) do
 				v:endgrabbed()
 			end
 		end
