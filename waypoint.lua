@@ -7,9 +7,9 @@ local waypoint_template = {
 	colour = {0,255,0,ui.transparency},
 	draw = function(self)
 		local pos = game.cam:cameraCoords(self.x, self.y)
-		love.graphics.setColor(temp.colour)
-		love.graphics.line(pos.x - temp.radius*game.cam.zoom, pos.y, pos.x + temp.radius*game.cam.zoom, pos.y)--horizontal part of cross
-		love.graphics.line(pos.x, pos.y - temp.radius*game.cam.zoom, pos.x, pos.y + temp.radius*game.cam.zoom)--vertical part of cross
+		love.graphics.setColor(self.colour)
+		love.graphics.line(pos.x - self.radius*game.cam.zoom, pos.y, pos.x + self.radius*game.cam.zoom, pos.y)--horizontal part of cross
+		love.graphics.line(pos.x, pos.y - self.radius*game.cam.zoom, pos.x, pos.y + self.radius*game.cam.zoom)--vertical part of cross
 	end
 }
 waypoint_template.__index = waypoint_template

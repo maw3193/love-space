@@ -1,3 +1,4 @@
+local orders = require"orders.lua"
 function love.load()
 	ui = require"ui.lua"
 	camera = require"lib/camera"
@@ -30,8 +31,6 @@ function love.load()
 
 	game.selstartx = 0
 	game.selstarty = 0
-	game.selendx = 0
-	game.selendy = 0
 	game.mousepressed = false
 	game.wallcolour = {255,0,0,255}
 	game.selboxcolour = {0,255,0,255}
@@ -90,13 +89,109 @@ function love.load()
 		love.graphics.setColor(game.wallcolour)
 		love.graphics.line(boundbegin.x, boundbegin.y, boundend.x, boundbegin.y, boundend.x, boundend.y, boundbegin.x, boundend.y, boundbegin.x, boundbegin.y) --square loop	
 	end
+	function game:drawselbox()
+		if game.mousepressed then
+			love.graphics.setColor(game.selboxcolour)
+			love.graphics.rectangle( "line", game.selstartx, game.selstarty, love.mouse:getX() - game.selstartx, love.mouse:getY() - game.selstarty)
+		end
+	end
 	function game:draw()
 		game:drawwalls()
 		game:drawthings()
 		game:drawselected()
+		game:drawselbox()
+	end
+	function game:clickdown(x, y, button)
+		if button == "l" then
+			game.mousepressed = true
+			game.selstartx = x
+			game.selstarty = y
+		end
 	end
 	function game:clickup(x, y, button)
-		
+		if button == "l" then
+			game.selected = nil
+			game.selected = {}
+			game.mousepressed = false
+			local selstart = game.cam:worldCoords(game.selstartx, game.selstarty)
+			local selend = game.cam:worldCoords(x,y)
+			--constrain to within the active area
+			if selstart.x > game.worldmaxx then selstart.x = game.worldmaxx end
+			if selstart.x < game.worldminx then selstart.x = game.worldminx end
+			if selstart.y > game.worldmaxy then selstart.y = game.worldmaxy end
+			if selstart.y < game.worldminy then selstart.y = game.worldminy end
+			if selend.x > game.worldmaxx then selend.x = game.worldmaxx end
+			if selend.x < game.worldminx then selend.x = game.worldminx end
+			if selend.y > game.worldmaxy then selend.y = game.worldmaxy end
+			if selend.y < game.worldminy then selend.y = game.worldminy end
+
+			if (math.abs(selend.x - selstart.x) < 3) or (math.abs(selend.y - selstart.y) < 3) then --selection is small enough to be a click	
+				for k,v in pairs(game.things) do
+					if v.shape:testPoint(selend.x,selend.y) then 
+						if v.isship then table.insert(game.selected, v) end
+					end
+				end
+			else
+				for k,v in pairs(game.things) do
+					local xmax
+					local xmin
+					local ymax
+					local ymin
+					if selend.x > selstart.x then
+						xmax = selend.x
+						xmin = selstart.x
+					else
+						xmax = selstart.x
+						xmin = selend.x
+					end
+					if selend.y > selstart.y then
+						ymax = selend.y
+						ymin = selstart.y
+					else
+						ymax = selstart.y
+						ymin = selend.y
+					end
+					if v.body:getX() <= xmax and v.body:getX() >= xmin and v.body:getY() <= ymax and v.body:getY() >= ymin then
+						if v.isship then table.insert(game.selected, v) end
+					end
+				end
+
+			end
+		elseif button == "r" then
+			local clickedthing = false --Checks if the click hits anything
+			local selend = game.cam:worldCoords(x,y)
+			--restrict coordinates to within the world
+			if selend.x > game.worldmaxx then selend.x = game.worldmaxx end
+			if selend.x < game.worldminx then selend.x = game.worldminx end
+			if selend.y > game.worldmaxy then selend.y = game.worldmaxy end
+			if selend.y < game.worldminy then selend.y = game.worldminy end
+
+			for k,v in pairs(game.things) do
+				if v.shape:testPoint(selend.x, selend.y) then 
+					clickedthing = true
+					for k2,v2 in pairs (game.selected) do
+						if v2 ~= v then
+							v2.order.func = orders.follow --Currently, ordered to follow whatever is clicked
+							v2.order.data = v
+						end
+					end
+				end
+			end
+			if clickedthing == false then
+				--Right-clicked empty space
+				local empty = true --If empty, I have nothing selected.
+				for k,v in pairs(game.selected) do
+					empty = false
+				end
+				if empty == false then --I have some ships selected to give orders to.
+					for k,v in pairs(game.selected) do
+						v.order.func = orders.move --Currently, ordered to move to wherever was clicked
+						v.order.data = waypoint.newwaypoint(selend.x, selend.y)
+					end
+				end
+			end
+
+		end
 	end
 	function game:getcollide(x,y)
 		return true

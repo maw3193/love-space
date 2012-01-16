@@ -23,6 +23,7 @@ local ui = {
 		while (current >= start) do
 			if self.elements[current]:getcollide(x,y) then
 				self.elements[current]:clickdown(x,y,button)
+				activeelement = self.elements[current]
 				break
 			else
 				current = current - 1
@@ -30,7 +31,8 @@ local ui = {
 		end
 	end,
 	clickup = function(self, x, y, button)
-
+		activeelement:clickup(x,y,button)
+		activeelement = nil
 	end,
 	update = function(self, dt)
 		for k,v in pairs(self.elements) do

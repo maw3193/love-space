@@ -40,6 +40,9 @@ local paneltemplate = {
 		if self.y + self.height > love.graphics.getHeight() then self.y = love.graphics.getHeight() - self.height end
 
 	end,
+	clickup = function(self, x, y, button)
+		self:endgrabbed()
+	end,
 	endgrabbed = function(self)
 		self.isgrabbed = false
 		self.grabbedx = 0
