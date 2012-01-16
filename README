@@ -3,8 +3,8 @@ Planned result: A top-down spaceship RTS with crafting elements and a high level
 
 Currently implemented:
 *Camera controlled by cursor keys for movement and NUM+, NUM-, NUM_ENTER for zoom.
-*Central ship belonging to team 1, manually-controlled by WASD to move and space to fire bullet.
-*4 ships belonging to team 2, don't collide with each other, but collide with player and do damage.
+*2 ships belonging to opposing teams. Ships on the same team do not collide with each other.
+*Take manual control of a ship by selecting it and pressing 'm', can move it with WASD and fire bullets with space
 *All ships can be selected by click or lasoo drag
 *Ships can be given orders by right-clicking. On empty space to give move order, on a ship to make it follow
 *Draggable panels that currently do nothing.

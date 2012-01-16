@@ -4,9 +4,15 @@ local ui = {
 	blue = {0,0,255,255},
 	white = {255,255,255,255},
 	black = {0,0,0,255},
+	grey = {127,127,127,255},
+	transgrey = {127,127,127,nil},
+	transgreen = {0,255,0,nil},
 	transparency = 127,
-	panelcol = {127,127,127,nil},--currently nil because I can't set it to "transparency" yet
-	healthbarheight = 2,
+	wallcolour = nil, --changed to red
+	selboxcolour = nil, --changed to green
+	selectedcolour = nil, --changed to transgreen
+	panelcol = nil,--currently nil because I can't set it to "transparency" yet
+	healthbarheight = 5,
 	clickedpanel = false,
 	activeelement = nil,
 	elements = {},
@@ -45,7 +51,14 @@ local ui = {
 		end
 	end,
 }
-ui.panelcol[4] = ui.transparency --can't set it in the constructor
+ui.transgrey[4] = ui.transparency
+ui.transgreen[4] = ui.transparency
+
+ui.panelcol = ui.transgrey
+ui.wallcolour = ui.red
+ui.selboxcolour = ui.green
+ui.selectedcolour = ui.transgreen
+
 --table.insert(ui.elements, things) COMMENTED OUT BECAUSE IT IS MADE IN love.load
 
 

@@ -15,7 +15,7 @@ local shiptemplate = {
 	end,
 	drawselected = function(self) --Draws the selection 
 		local pos = game.cam:cameraCoords(self.body:getX(), self.body:getY())
-		love.graphics.setColor(game.selectedcolour)
+		love.graphics.setColor(ui.selectedcolour)
 		love.graphics.rectangle("line", pos.x - self.cx*game.cam.zoom, pos.y - self.cy*game.cam.zoom, self.radius*2*game.cam.zoom, self.radius*2*game.cam.zoom)
 		self:draworder()
 		love.graphics.setColor(ui.red)
@@ -50,6 +50,9 @@ local shiptemplate = {
 		if self.hp < 0 then
 			--print("Ship should be dead!")
 			self.isalive = false
+			if game.manualship == self then
+				game.manualship = nil
+			end
 			if self.order then
 				self.order.func = nil
 				self.order.data = nil

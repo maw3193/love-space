@@ -13,6 +13,7 @@ function love.load()
 	game = {}
 	game.things = {}
 	game.selected = {}
+	game.manualship = nil
 	game.worldminx = -400
 	game.worldminy = -300
 	game.worldmaxx = 400
@@ -32,9 +33,6 @@ function love.load()
 	game.selstartx = 0
 	game.selstarty = 0
 	game.mousepressed = false
-	game.wallcolour = {255,0,0,255}
-	game.selboxcolour = {0,255,0,255}
-	game.selectedcolour = {0,255,0,127}
 
 	game.world = love.physics.newWorld(game.worldminx - game.wallthickness - game.worldemptyoutside,game.worldminy - game.wallthickness - game.worldemptyoutside,game.worldmaxx + game.wallthickness + game.worldemptyoutside,game.worldmaxy + game.wallthickness + game.worldemptyoutside)
 	game.world:setCallbacks(add, persist, rem)
@@ -53,12 +51,12 @@ function love.load()
 	game.leftwall:setFilterData(game.collgroups.walls, game.collgroups.ships, 0)
 	game.rightwall:setFilterData(game.collgroups.walls, game.collgroups.ships, 0)
 	
-
-	game.things.ship1 = ship.newship()
-	table.insert(game.things, ship.newship(50,50,1,16,"art/ship32.png", ui.red, 2))
-	table.insert(game.things, ship.newship(-50,50,1,16,"art/ship32.png", ui.white, 2))
-	table.insert(game.things, ship.newship(50,-50,1,16,"art/ship32.png", ui.green, 2))
-	table.insert(game.things, ship.newship(-50,-50,1,16,"art/ship32.png", ui.blue, 2))
+	table.insert(game.things, ship.newship(50,50,1,16,"art/ship32.png", ui.blue, 1))
+	table.insert(game.things, ship.newship(-50,50,1,16,"art/ship32.png", ui.blue, 1))
+	table.insert(game.things, ship.newship(50,-50,1,16,"art/ship32.png", ui.red, 2))
+	table.insert(game.things, ship.newship(-50,-50,1,16,"art/ship32.png", ui.red, 2))
+	game.manualship = game.things[1]
+	
 	game.cam = camera(vector(0,0),1,0)
 	game.cam:attach()
 
@@ -86,12 +84,12 @@ function love.load()
 	function game:drawwalls()
 		local boundbegin = game.cam:cameraCoords(game.worldminx,game.worldminy)
 		local boundend = game.cam:cameraCoords(game.worldmaxx,game.worldmaxy)
-		love.graphics.setColor(game.wallcolour)
+		love.graphics.setColor(ui.wallcolour)
 		love.graphics.line(boundbegin.x, boundbegin.y, boundend.x, boundbegin.y, boundend.x, boundend.y, boundbegin.x, boundend.y, boundbegin.x, boundbegin.y) --square loop	
 	end
 	function game:drawselbox()
 		if game.mousepressed then
-			love.graphics.setColor(game.selboxcolour)
+			love.graphics.setColor(ui.selboxcolour)
 			love.graphics.rectangle( "line", game.selstartx, game.selstarty, love.mouse:getX() - game.selstartx, love.mouse:getY() - game.selstarty)
 		end
 	end
@@ -207,7 +205,6 @@ end
 function love.update(dt)
 	ui:update(dt)
 	local camspeed = 100
-	local thrust = 1000	
 	local turnspeed = 1000
 
 	if love.keyboard.isDown("left") then
@@ -243,18 +240,19 @@ function love.update(dt)
 				table.remove(game.things, k)
 			end
 		end
-
-		if love.keyboard.isDown("w") then
-			game.things.ship1.body:applyForce(thrust * dt * math.cos(game.things.ship1.body:getAngle()), thrust * dt * math.sin(game.things.ship1.body:getAngle()))
-		end
-		if love.keyboard.isDown("s") then
-			game.things.ship1.body:applyForce(-thrust * dt * math.cos(game.things.ship1.body:getAngle()), -thrust * dt * math.sin(game.things.ship1.body:getAngle()))
-		end
-		if love.keyboard.isDown("a") then
-			game.things.ship1.body:applyTorque(-turnspeed*dt)
-		end
-		if love.keyboard.isDown("d") then
-			game.things.ship1.body:applyTorque(turnspeed*dt)
+		if game.manualship then
+			if love.keyboard.isDown("w") then
+				game.manualship.body:applyForce(game.manualship.thrust * dt * math.cos(game.manualship.body:getAngle()), game.manualship.thrust * dt * math.sin(game.manualship.body:getAngle()))
+			end
+			if love.keyboard.isDown("s") then
+				game.manualship.body:applyForce(-game.manualship.thrust * dt * math.cos(game.manualship.body:getAngle()), -game.manualship.thrust * dt * math.sin(game.manualship.body:getAngle()))
+			end
+			if love.keyboard.isDown("a") then
+				game.manualship.body:applyTorque(-game.manualship.torque*dt)
+			end
+			if love.keyboard.isDown("d") then
+				game.manualship.body:applyTorque(game.manualship.torque*dt)
+			end
 		end
 	end
 end
