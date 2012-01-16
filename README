@@ -1,0 +1,13 @@
+Love-space (working title)
+Planned result: A top-down spaceship RTS with crafting elements and a high level of ship customisation.
+
+TO RUN:
+*LINUX:
+1. Install love2d (available at love2d.org, or "sudo apt-get install love")
+2. Download the game folder
+2. In terminal, navigate to the folder and run "love ."
+
+*WINDOWS:
+1. Install love2d (available at love2d.org)
+2. Download the game folder
+3. Run the folder with love by dragging the folder onto the love icon.
