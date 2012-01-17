@@ -7,7 +7,6 @@ function orders.move(dt, ship, data)
 	if ship.shape:testPoint(data.x, data.y) then
 		ship.order.func = nil
 		ship.order.data = nil
-
 	end
 end
 

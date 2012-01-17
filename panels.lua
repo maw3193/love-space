@@ -1,6 +1,6 @@
 local panels = {}
 
-	local ui = require"ui.lua"
+local ui = require"ui.lua"
 
 local paneltemplate = {
 	x = 0,
@@ -11,9 +11,14 @@ local paneltemplate = {
 	grabbedx = 0,
 	grabbedy = 0,
 	colour = ui.panelcol,
+	elements = {}, --Panel elements like buttons and bars.
+
 	draw = function(self)
 		love.graphics.setColor(self.colour)
 		love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
+		for k,v in pairs(self.elements) do
+			v:draw()
+		end
 	end,
 	getcollide = function(self, x, y)
 		if x >= self.x and x <= self.x + self.width and y >= self.y and y <= self.y + self.height then
@@ -50,6 +55,15 @@ local paneltemplate = {
 	end,
 	update = function(self, dt)
 		if self.isgrabbed then self:movegrabbed() end
+	end,
+	getpanelx = function(self, x)
+		return x - self.x
+	end,
+	getpanely = function(self, y)
+		return y - self.y
+	end,
+	addelement = function(self, element)
+		table.insert(self.elements, element)
 	end,
 
 }

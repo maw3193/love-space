@@ -7,6 +7,7 @@ function love.load()
 	local waypoint = require "waypoint.lua"
 	local projectile = require "projectile.lua"
 	local panels = require "panels.lua"
+	local panel_elements = require"panel_elements.lua"
 	require"inputcallbacks.lua"
 	love.graphics.setLineWidth(1.5)
 
@@ -62,6 +63,7 @@ function love.load()
 
 	table.insert(ui.elements, game)
 	table.insert(ui.elements, panels.newpanel())
+	ui.elements[2]:addelement(panel_elements.newtextbox(ui.elements[2]))
 
 	--[[
 	local modes = love.graphics.getModes()
@@ -168,7 +170,7 @@ function love.load()
 				if v.shape:testPoint(selend.x, selend.y) then 
 					clickedthing = true
 					for k2,v2 in pairs (game.selected) do
-						if v2 ~= v then
+						if v2 ~= v and v2.team == ui.team then
 							v2.order.func = orders.follow --Currently, ordered to follow whatever is clicked
 							v2.order.data = v
 						end
@@ -177,14 +179,12 @@ function love.load()
 			end
 			if clickedthing == false then
 				--Right-clicked empty space
-				local empty = true --If empty, I have nothing selected.
-				for k,v in pairs(game.selected) do
-					empty = false
-				end
-				if empty == false then --I have some ships selected to give orders to.
+				if game.selected[1] then --I have some ships selected to give orders to.
 					for k,v in pairs(game.selected) do
-						v.order.func = orders.move --Currently, ordered to move to wherever was clicked
-						v.order.data = waypoint.newwaypoint(selend.x, selend.y)
+						if v.team == ui.team then
+							v.order.func = orders.move --Currently, ordered to move to wherever was clicked
+							v.order.data = waypoint.newwaypoint(selend.x, selend.y)
+						end
 					end
 				end
 			end
