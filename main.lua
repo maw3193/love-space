@@ -52,10 +52,10 @@ function love.load()
 	game.leftwall:setFilterData(game.collgroups.walls, game.collgroups.ships, 0)
 	game.rightwall:setFilterData(game.collgroups.walls, game.collgroups.ships, 0)
 	
-	table.insert(game.things, ship.newship(50,50,1,16,"art/ship32.png", ui.blue, 1))
-	table.insert(game.things, ship.newship(-50,50,1,16,"art/ship32.png", ui.blue, 1))
-	table.insert(game.things, ship.newship(50,-50,1,16,"art/ship32.png", ui.red, 2))
-	table.insert(game.things, ship.newship(-50,-50,1,16,"art/ship32.png", ui.red, 2))
+	table.insert(game.things, ship.newship(50,50,1,16,"art/ship32.png", ui.blue, 1, "Blue 1"))
+	table.insert(game.things, ship.newship(-50,50,1,16,"art/ship32.png", ui.blue, 1, "Blue 2"))
+	table.insert(game.things, ship.newship(50,-50,1,16,"art/ship32.png", ui.red, 2, "Red 1"))
+	table.insert(game.things, ship.newship(-50,-50,1,16,"art/ship32.png", ui.red, 2, "Red 2"))
 	game.manualship = game.things[1]
 	
 	game.cam = camera(vector(0,0),1,0)
@@ -169,12 +169,17 @@ function love.load()
 			if selend.y < game.worldminy then selend.y = game.worldminy end
 
 			for k,v in pairs(game.things) do
-				if v.shape:testPoint(selend.x, selend.y) then 
+				if v.shape:testPoint(selend.x, selend.y) then  --v is target
 					clickedthing = true
-					for k2,v2 in pairs (game.selected) do
+					for k2,v2 in pairs (game.selected) do --v2 is actor
 						if v2 ~= v and v2.team == ui.team then
-							v2.order.func = orders.follow --Currently, ordered to follow whatever is clicked
-							v2.order.data = v
+							if v.team == v2.team then
+								v2.order.func = orders.follow --Currently, ordered to follow whatever is clicked
+								v2.order.data = v
+							else
+								v2.order.func = orders.attack
+								v2.order.data = v
+							end
 						end
 					end
 				end
@@ -210,22 +215,22 @@ function love.update(dt)
 	local turnspeed = 1000
 
 	if love.keyboard.isDown("left") then
-		game.cam:move(-camspeed*dt, 0)
+		game.cam:move(-camspeed*dt/game.cam.zoom, 0)
 	end
 	if love.keyboard.isDown("right") then
-		game.cam:move(camspeed*dt,0)
+		game.cam:move(camspeed*dt/game.cam.zoom,0)
 	end
 	if love.keyboard.isDown("up") then
-		game.cam:move(0,-camspeed*dt)
+		game.cam:move(0,-camspeed*dt/game.cam.zoom)
 	end
 	if love.keyboard.isDown("down") then
-		game.cam:move(0,camspeed*dt)
+		game.cam:move(0,camspeed*dt/game.cam.zoom)
 	end
 	if love.keyboard.isDown("kp+") then
-		game.cam.zoom = 2
+		game.cam.zoom = game.cam.zoom*1.1
 	end
 	if love.keyboard.isDown("kp-") then
-		game.cam.zoom = 0.5
+		game.cam.zoom = game.cam.zoom*0.9
 	end
 	if love.keyboard.isDown("kpenter") then
 		game.cam.zoom = 1

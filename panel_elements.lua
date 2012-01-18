@@ -126,7 +126,7 @@ local buttontemplate = {
 		if not self.toggle then
 			self.clicked = true
 			if self.ondown then self:ondown() end
-			print("button clicked down")
+			--print("button clicked down")
 		end
 
 	end,
@@ -135,16 +135,16 @@ local buttontemplate = {
 			if self.clicked then
 				self.clicked = false
 				if self.onup then self:onup() end
-				print("button toggled up")
+				--print("button toggled up")
 			else
 				self.clicked = true
 				if self.ondown then self:ondown() end
-				print("button toggled down")
+				--print("button toggled down")
 			end
 		else
 			self.clicked = false
 			if self.onup then self:onup() end
-			print("button clicked up")
+			--print("button clicked up")
 		end
 	end,
 	update = function(self, dt)

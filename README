@@ -7,8 +7,9 @@ Currently implemented:
 *Take manual control of a ship by selecting it and pressing 'm', can move it with WASD and fire bullets with space
 *All ships can be selected by click or lasoo drag
 *Ships can be given orders by right-clicking. On empty space to give move order, on a ship to make it follow
-*1 draggable panel with a button that spawns more enemy ships
-
+*1 draggable panel with a button that spawns more enemy ships.
+*All ships have a sensor radius at which they are aware of other ships.
+*Rudimentary AI in ships allows them to fire at hostile ships.
 
 TO RUN:
 *LINUX:
