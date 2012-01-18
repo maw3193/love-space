@@ -1,3 +1,4 @@
+local ui = require("ui.lua")
 --Builds the ship prototype
 local ship = {}
 
@@ -102,5 +103,10 @@ function ship.newship(x, y, mass, radius, image, colour, team) --Full constructo
 	return tempship
 end
 
+function ship.randomenemy()
+	local x = math.random(game.worldminx, game.worldmaxx)
+	local y = math.random(game.worldminy, game.worldmaxy)
+	table.insert(game.things, ship.newship(x, y, _, _, _, ui.red, 2))
+end
 
 return ship

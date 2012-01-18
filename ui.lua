@@ -12,9 +12,17 @@ local ui = {
 	selboxcolour = nil, --changed to green
 	selectedcolour = nil, --changed to transgreen
 	panelcol = nil,--currently nil because I can't set it to "transparency" yet
-	healthbarheight = 5,
+	textcolour = nil,
+	linecolour = nil,
+	buttonbasecol = nil,
+	buttonhovercol = nil,
+	buttonclickcol = nil,
+	healthbarheight = 1,
 	clickedpanel = false,
 	activeelement = nil,
+	smallfont = nil,
+	medfont = nil,
+	largefont = nil,
 	elements = {},
 	team = 1,
 	clickdown = function(self, x, y, button)
@@ -53,7 +61,15 @@ ui.panelcol = ui.transgrey
 ui.wallcolour = ui.red
 ui.selboxcolour = ui.green
 ui.selectedcolour = ui.transgreen
+ui.textcolour = ui.white
+ui.linecolour = ui.white
+ui.buttonbasecol = ui.transgrey
+ui.buttonhovercol = ui.grey
+ui.buttonclickcol = ui.white
 
+ui.font10 = love.graphics.newFont(10)
+ui.font12 = love.graphics.newFont(12)
+ui.font14 = love.graphics.newFont(14)
 --table.insert(ui.elements, things) COMMENTED OUT BECAUSE IT IS MADE IN love.load
 
 

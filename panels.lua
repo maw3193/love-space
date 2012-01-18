@@ -20,7 +20,7 @@ local paneltemplate = {
 			v:draw()
 		end
 	end,
-	getcollide = function(self, x, y)
+	getcollide = function(self, x, y) --getcollide for panels is screen coordinates.
 		if x >= self.x and x <= self.x + self.width and y >= self.y and y <= self.y + self.height then
 			return true
 
@@ -29,7 +29,17 @@ local paneltemplate = {
 		end
 	end,
 	clickdown = function(self, x, y, button)
-		self:startgrabbed(x,y)
+		local clickedelement = false
+		for k,v in pairs(self.elements) do
+			if v:getcollide(x - self.x, y - self.y) then
+				clickedelement = true
+				v:clickdown(x - self.x, y - self.y, button)
+			end
+		end
+		if not clickedelement then
+			self:startgrabbed(x,y)
+		end
+
 	end,
 	startgrabbed = function(self, x, y)
 		self.isgrabbed = true
@@ -46,6 +56,11 @@ local paneltemplate = {
 
 	end,
 	clickup = function(self, x, y, button)
+		for k,v in pairs(self.elements) do
+			if v:getcollide(x - self.x, y - self.y) then
+				v:clickup(x - self.x, y - self.y, button)
+			end
+		end
 		self:endgrabbed()
 	end,
 	endgrabbed = function(self)
@@ -55,6 +70,9 @@ local paneltemplate = {
 	end,
 	update = function(self, dt)
 		if self.isgrabbed then self:movegrabbed() end
+		for k,v in pairs(self.elements) do
+			v:update(dt)
+		end
 	end,
 	getpanelx = function(self, x)
 		return x - self.x

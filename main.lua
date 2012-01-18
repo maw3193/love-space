@@ -63,7 +63,9 @@ function love.load()
 
 	table.insert(ui.elements, game)
 	table.insert(ui.elements, panels.newpanel())
-	ui.elements[2]:addelement(panel_elements.newtextbox(ui.elements[2]))
+	ui.elements[2]:addelement(panel_elements.newtextbox(ui.elements[2], 0, 0, "Enemy spawner", _, "center", ui.largefont))
+	ui.elements[2]:addelement(panel_elements.newbutton(ui.elements[2], 0, 16, 100, 84, "", "art/ship32.png", _, false, _, ship.randomenemy))
+	ui.elements[2].elements[2].iconcol = ui.red
 
 	--[[
 	local modes = love.graphics.getModes()

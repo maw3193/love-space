@@ -14,7 +14,7 @@ function love.keyreleased(key)
 		table.insert(game.things, projectile.newprojectile(game.manualship.body:getX(), game.manualship.body:getY(),
 	velx, vely, game.manualship.body:getAngle(), 
 	0.01, 4, "art/shell16.png", ui.white, game.manualship.team))
-	elseif key == "m" and table.maxn(game.selected) == 1 then
+	elseif key == "m" and table.maxn(game.selected) == 1 and game.selected[1].team == ui.team then
 		game.manualship = game.selected[1]
 	end
 end
