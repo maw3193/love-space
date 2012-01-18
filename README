@@ -7,7 +7,7 @@ Currently implemented:
 *Take manual control of a ship by selecting it and pressing 'm', can move it with WASD and fire bullets with space
 *All ships can be selected by click or lasoo drag
 *Ships can be given orders by right-clicking. On empty space to give move order, on a ship to make it follow
-*Draggable panels that currently do nothing.
+*1 draggable panel with a button that spawns more enemy ships
 
 
 TO RUN:
