@@ -8,6 +8,7 @@ function love.load()
 	local projectile = require "projectile.lua"
 	local panels = require "panels.lua"
 	local panel_elements = require"panel_elements.lua"
+	local turret = require"turret.lua"
 	require"inputcallbacks.lua"
 	love.graphics.setLineWidth(1.5)
 
@@ -15,10 +16,10 @@ function love.load()
 	game.things = {}
 	game.selected = {}
 	game.manualship = nil
-	game.worldminx = -400
-	game.worldminy = -300
-	game.worldmaxx = 400
-	game.worldmaxy = 300
+	game.worldminx = -500
+	game.worldminy = -500
+	game.worldmaxx = 500
+	game.worldmaxy = 500
 	game.wallthickness = 100
 	game.worldemptyoutside = 100
 	game.paused = false
@@ -54,9 +55,9 @@ function love.load()
 	
 	table.insert(game.things, ship.newship(50,50,1,16,"art/ship32.png", ui.blue, 1, "Blue 1"))
 	table.insert(game.things, ship.newship(-50,50,1,16,"art/ship32.png", ui.blue, 1, "Blue 2"))
-	table.insert(game.things, ship.newship(50,-50,1,16,"art/ship32.png", ui.red, 2, "Red 1"))
-	table.insert(game.things, ship.newship(-50,-50,1,16,"art/ship32.png", ui.red, 2, "Red 2"))
+	table.insert(game.things, ship.newship(0,-50,1,16,"art/ship32.png", ui.red, 2, "Red 1"))
 	game.manualship = game.things[1]
+	table.insert(game.things, turret.newturret(game.things[1]))
 	
 	game.cam = camera(vector(0,0),1,0)
 	game.cam:attach()
@@ -86,10 +87,12 @@ function love.load()
 		end
 	end
 	function game:drawwalls()
-		local boundbegin = game.cam:cameraCoords(game.worldminx,game.worldminy)
-		local boundend = game.cam:cameraCoords(game.worldmaxx,game.worldmaxy)
+		local Ul = game.cam:cameraCoords(game.worldminx,game.worldminy)
+		local Ur = game.cam:cameraCoords(game.worldmaxx, game.worldminy)
+		local Dr = game.cam:cameraCoords(game.worldmaxx,game.worldmaxy)
+		local Dl = game.cam:cameraCoords(game.worldminx, game.worldmaxy)
 		love.graphics.setColor(ui.wallcolour)
-		love.graphics.line(boundbegin.x, boundbegin.y, boundend.x, boundbegin.y, boundend.x, boundend.y, boundbegin.x, boundend.y, boundbegin.x, boundbegin.y) --square loop	
+		love.graphics.line(Ul.x, Ul.y, Ur.x, Ur.y, Dr.x, Dr.y, Dl.x, Dl.y, Ul.x, Ul.y)
 	end
 	function game:drawselbox()
 		if game.mousepressed then
@@ -215,26 +218,42 @@ function love.update(dt)
 	local turnspeed = 1000
 
 	if love.keyboard.isDown("left") then
-		game.cam:move(-camspeed*dt/game.cam.zoom, 0)
+		local vx = camspeed*dt*math.sin(game.cam.rot-math.pi/2)/game.cam.zoom
+		local vy = camspeed*dt*math.cos(game.cam.rot-math.pi/2)/game.cam.zoom
+		game.cam:move(vx, vy)
 	end
 	if love.keyboard.isDown("right") then
-		game.cam:move(camspeed*dt/game.cam.zoom,0)
+		local vx = -camspeed*dt*math.sin(game.cam.rot-math.pi/2)/game.cam.zoom
+		local vy = -camspeed*dt*math.cos(game.cam.rot-math.pi/2)/game.cam.zoom
+		game.cam:move(vx, vy)
 	end
 	if love.keyboard.isDown("up") then
-		game.cam:move(0,-camspeed*dt/game.cam.zoom)
+		local vx = -camspeed*dt*math.sin(game.cam.rot)/game.cam.zoom
+		local vy = -camspeed*dt*math.cos(game.cam.rot)/game.cam.zoom
+		game.cam:move(vx, vy)
 	end
 	if love.keyboard.isDown("down") then
-		game.cam:move(0,camspeed*dt/game.cam.zoom)
+		local vx = camspeed*dt*math.sin(game.cam.rot)/game.cam.zoom
+		local vy = camspeed*dt*math.cos(game.cam.rot)/game.cam.zoom
+		game.cam:move(vx, vy)
 	end
 	if love.keyboard.isDown("kp+") then
-		game.cam.zoom = game.cam.zoom*1.1
+		game.cam.zoom = game.cam.zoom + game.cam.zoom*dt
 	end
 	if love.keyboard.isDown("kp-") then
-		game.cam.zoom = game.cam.zoom*0.9
+		game.cam.zoom = game.cam.zoom - game.cam.zoom*dt
 	end
 	if love.keyboard.isDown("kpenter") then
 		game.cam.zoom = 1
+		game.cam.rot = 0
 	end
+	if love.keyboard.isDown("e") then
+		game.cam:rotate(dt*0.5)
+	end
+	if love.keyboard.isDown("q") then
+		game.cam:rotate(-dt*0.5)
+	end
+
 
 	ui:update(dt)
 

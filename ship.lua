@@ -21,7 +21,7 @@ local shiptemplate = {
 	draw = function(self) 
 		local pos = game.cam:cameraCoords(self.body:getX(), self.body:getY())
 		love.graphics.setColor(self.colour)
-		love.graphics.draw(self.image, pos.x, pos.y, self.body:getAngle(), game.cam.zoom * self.imagescale, game.cam.zoom * self.imagescale, self.image:getWidth()/2, self.image:getHeight()/2)
+		love.graphics.draw(self.image, pos.x, pos.y, self.body:getAngle() + game.cam.rot, game.cam.zoom * self.imagescale, game.cam.zoom * self.imagescale, self.cx, self.cy)
 	end,
 	drawselected = function(self) --Draws the selection 
 		local pos = game.cam:cameraCoords(self.body:getX(), self.body:getY())
