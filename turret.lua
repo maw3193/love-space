@@ -1,6 +1,6 @@
 local turret = {}
 local ui = require"ui.lua"
-
+local projectile = require"projectile.lua"
 local turrettemplate = {
 	parent = nil, --Thing the turret is attached to
 	body = nil, --Turrets have a physical existence
@@ -9,8 +9,10 @@ local turrettemplate = {
 	joint = nil, --Thing that attachs turret to parent
 	cx = nil, --Value depends on dimensions of image
 	cy = nil, --^
+	projectile = projectile.newprojectile,
 	imagescale = 1,
 	isalive = true,
+	target = nil,
 	torque = 10,
 	angdamp = 5,
 	draw = function(self)
@@ -23,9 +25,37 @@ local turrettemplate = {
 	update = function(self, dt)
 		if not self.parent.isalive then
 			self.isalive = false
-			
+		end
+		if not self.target then --Needs to find a new target. 
+			for k,v in pairs (self.parent.visible) do --Go through all the parent's visible ships.
+				if k.team ~= self.parent.team then --the turret knows the ship has detected an enemy ship.
+					self.target = k
+					break
+				end
+			end
+		end
+		if self.target then
+			if self.target.isalive then
+				--find the angle between self and target
+				local dx = self.target.body:getX() - self.body:getX()
+				local dy = self.target.body:getY() - self.body:getY()
+				local tang = math.atan2(dy, dx)
+				local ang = self.body:getAngle()
+				local dang = tang - ang
+				if dang > math.pi then dang = dang - 2*math.pi end
+				if dang < -math.pi then dang = dang + 2*math.pi end
+				self.body:applyTorque(dang*self.torque*dt)
+				self:fire()
+			else
+				self.target = nil
+			end
 		end
 	end,
+	fire = function(self) --takes the constructor to create the required bullet
+			local vx, vy = self.body:getLinearVelocity()
+			table.insert(game.things, self.projectile(self.body:getX(), self.body:getY(), vx, vy, self.body:getAngle(), 0.01, 4, "art/shell16.png", self.parent.colour, self.parent.team))
+	end,
+
 }
 turrettemplate.__index = turrettemplate -- look up in shiptemplate
 

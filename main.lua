@@ -58,6 +58,8 @@ function love.load()
 	table.insert(game.things, ship.newship(0,-50,1,16,"art/ship32.png", ui.red, 2, "Red 1"))
 	game.manualship = game.things[1]
 	table.insert(game.things, turret.newturret(game.things[1]))
+	game.things[1].hp = 1000
+	game.things[1].hpmax = 1000
 	
 	game.cam = camera(vector(0,0),1,0)
 	game.cam:attach()
