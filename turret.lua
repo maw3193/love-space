@@ -21,7 +21,10 @@ local turrettemplate = {
 		game.cam.zoom * self.imagescale, game.cam.zoom * self.imagescale, self.cx, self.cy)
 	end,
 	update = function(self, dt)
-
+		if not self.parent.isalive then
+			self.isalive = false
+			
+		end
 	end,
 }
 turrettemplate.__index = turrettemplate -- look up in shiptemplate
@@ -29,7 +32,7 @@ turrettemplate.__index = turrettemplate -- look up in shiptemplate
 function turret.newturret(parent, x, y, mass, radius, image)
 	x = x or 0
 	y = y or 0
-	mass = mass or 0.05
+	mass = mass or 0.1
 	image = image or "art/cannon16.png"
 	radius = radius or 8
 	local temp = setmetatable({}, turrettemplate)

@@ -52,7 +52,7 @@ function love.load()
 	game.bottomwall:setFilterData(game.collgroups.walls, game.collgroups.ships, 0)
 	game.leftwall:setFilterData(game.collgroups.walls, game.collgroups.ships, 0)
 	game.rightwall:setFilterData(game.collgroups.walls, game.collgroups.ships, 0)
-	
+
 	table.insert(game.things, ship.newship(50,50,1,16,"art/ship32.png", ui.blue, 1, "Blue 1"))
 	table.insert(game.things, ship.newship(-50,50,1,16,"art/ship32.png", ui.blue, 1, "Blue 2"))
 	table.insert(game.things, ship.newship(0,-50,1,16,"art/ship32.png", ui.red, 2, "Red 1"))
