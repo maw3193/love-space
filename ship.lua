@@ -10,8 +10,8 @@ local shiptemplate = {
 	hpmax = 100,
 	sensorrange = 100,
 	sensorson = false,
-	timetofire = 0,
-	firetime = 0.5,
+	firecharge = 0,
+	fireinterval = 0.5,
 	isship = true,
 	isalive = true,
 	visible = nil, --Table of all the ships it can see
@@ -80,11 +80,7 @@ local shiptemplate = {
 	end,
 
 	update = function(self, dt)
-		if self.timetofire >0 then
-			self.timetofire = self.timetofire - dt
-		else
-			self.timetofire = 0
-		end
+		self.firecharge = self.firecharge + dt
 		if self.ai then
 			self.ai:update(self, dt)
 		end
@@ -110,11 +106,15 @@ local shiptemplate = {
 		end
 	end,
 
+	canfire = function(self)
+		return self.firecharge >= self.fireinterval
+	end
+
 	fire = function(self) --takes the constructor to create the required bullet
-		if self.timetofire == 0 then
+		if self:canfire() then
 			local vx, vy = self.body:getLinearVelocity()
 			table.insert(game.things, self.projectile(self.body:getX(), self.body:getY(), vx, vy, self.body:getAngle(), 0.01, 4, "art/shell16.png", self.colour, self.team))
-			self.timetofire = self.firetime
+			self.firecharge = 0
 		end
 	end
 }
