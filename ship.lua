@@ -108,7 +108,7 @@ local shiptemplate = {
 
 	canfire = function(self)
 		return self.firecharge >= self.fireinterval
-	end
+	end,
 
 	fire = function(self) --takes the constructor to create the required bullet
 		if self:canfire() then
