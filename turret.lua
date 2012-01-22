@@ -15,6 +15,9 @@ local turrettemplate = {
 	target = nil,
 	torque = 10,
 	angdamp = 5,
+	-- fire rate limiter code
+	fireinterval = 1,
+	firecharge = 0,
 	draw = function(self)
 		local pos = game.cam:cameraCoords(self.body:getX(), self.body:getY())
 		local colour = self.parent.colour or ui.white
@@ -23,6 +26,7 @@ local turrettemplate = {
 		game.cam.zoom * self.imagescale, game.cam.zoom * self.imagescale, self.cx, self.cy)
 	end,
 	update = function(self, dt)
+		self.firecharge = self.firecharge + dt
 		if not self.parent.isalive then
 			self.isalive = false
 		end
@@ -51,9 +55,17 @@ local turrettemplate = {
 			end
 		end
 	end,
+
+	canfire = function(self)
+		return self.firecharge >= self.fireinterval
+	end,
+
 	fire = function(self) --takes the constructor to create the required bullet
+		if self:canfire() then
 			local vx, vy = self.body:getLinearVelocity()
 			table.insert(game.things, self.projectile(self.body:getX(), self.body:getY(), vx, vy, self.body:getAngle(), 0.01, 4, "art/shell16.png", self.parent.colour, self.parent.team))
+			self.firecharge = 0
+		end
 	end,
 
 }
