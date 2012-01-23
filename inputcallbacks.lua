@@ -11,8 +11,12 @@ function love.keyreleased(key)
 		game.paused = not game.paused
 	elseif key == " " and game.manualship then
 		game.manualship:fire()
-	elseif key == "m" and table.maxn(game.selected) == 1 and game.selected[1].team == ui.team then
-		game.manualship = game.selected[1]
+	elseif key == "m" then
+		if table.maxn(game.selected) == 1 and game.selected[1].team == ui.team then
+			game.manualship = game.selected[1]
+		elseif table.maxn(game.selected) < 1 then
+			game.manualship = nil
+		end
 	end
 end
 
