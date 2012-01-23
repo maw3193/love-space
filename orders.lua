@@ -11,11 +11,13 @@ function orders.move(dt, ship, data)
 end
 
 function orders.follow(dt, ship, data)
-	local temp = {}
-	temp.x = data.body:getX()
-	temp.y = data.body:getY()
-	orders.movedist(dt, ship, temp) --Lazy workaround
-	orders.smarterturn(dt, ship, temp) --Next time: make it move away if too close
+	if ship ~= game.manualship then
+		local temp = {}
+		temp.x = data.body:getX()
+		temp.y = data.body:getY()
+		orders.movedist(dt, ship, temp) --Lazy workaround
+		orders.smarterturn(dt, ship, temp) --Next time: make it move away if too close
+	end
 	if data.isalive == false then
 		ship.order.func = nil
 		ship.order.data = nil
@@ -23,12 +25,14 @@ function orders.follow(dt, ship, data)
 end
 
 function orders.attack(dt, ship, data)
+	if ship ~= game.manualship then
 	local temp = {}
-	temp.x = data.body:getX()
-	temp.y = data.body:getY()
-	orders.movedist(dt, ship, temp) --Lazy workaround
-	orders.smarterturn(dt, ship, temp) --Next time: make it move away if too close
-	orders.fireon(dt, ship, temp)
+		temp.x = data.body:getX()
+		temp.y = data.body:getY()
+		orders.movedist(dt, ship, temp) --Lazy workaround
+		orders.smarterturn(dt, ship, temp) --Next time: make it move away if too close
+		orders.fireon(dt, ship, temp)
+	end
 	if data.isalive == false then
 		ship.order.func = nil
 		ship.order.data = nil
