@@ -1,0 +1,22 @@
+SOON:
+*Turrets with limited firing arcs
+*Turrets react to collisions
+*Turrets react to being clicked
+*Ships & Turrets with indicator of when they can next fire
+*Turrets turn along with the ship (if possible)
+EVENTUALLY:
+*Ships have sockets which are filled by turrets -> Ship is now aware of the things attached to it.
+*Ships have a menu which displays information about them
+*Ships can be given orders using buttons
+*Ships can receive chains of orders
+*Ships have a cargo/inventory system
+*Item crates can exist in space and be picked up by ships.
+*FACTORIES - attach to sockets and turn one item into another.
+*ASTEROIDS - hold resources as a special item in inventory. drop crates when destroyed.
+*ASTEROID BASES - Attach to asteroids but have their own team information.
+*ASTEROID MINING - Asteroid base that extracts resources from the asteroid and stores it in cargo.
+*Saving and Loading
+MAYBE:
+*Ships can board each other to try and seize control.
+*FTL - can transport ships to another box2d world.
+*SANDBOX - Can create box2d worlds during gameplay.
