@@ -168,5 +168,9 @@ function ship.randomenemy()
 	local y = math.random(game.worldminy, game.worldmaxy)
 	table.insert(game.things, ship.newship(x, y, _, _, _, ui.red, 2))
 end
-
+function ship.randomfriend()
+	local x = math.random(game.worldminx, game.worldmaxx)
+	local y = math.random(game.worldminy, game.worldmaxy)
+	table.insert(game.things, ship.newship(x, y, _, _, _, ui.blue, 1))
+end
 return ship
