@@ -12,6 +12,7 @@ local turrettemplate = {
 	projectile = projectile.newprojectile,
 	imagescale = 1,
 	isalive = true,
+	isturret = true,
 	target = nil,
 	torque = 10,
 	angdamp = 2,

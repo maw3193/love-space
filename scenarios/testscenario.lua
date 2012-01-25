@@ -14,7 +14,10 @@ game.makeworld()
 table.insert(game.things, ship.newship(50,50,1,16,"art/ship32.png", ui.blue, 1, "Blue 1"))
 table.insert(game.things, ship.newship(0,-50,1,16,"art/ship32.png", ui.red, 2, "Red 1"))
 game.manualship = game.things[1]
-table.insert(game.things, turret.newturret(game.things[1]))
+table.insert(game.things, turret.newturret(game.things[1], -8, -8))
+table.insert(game.things, turret.newturret(game.things[1], -8, 8))
+table.insert(game.things, turret.newturret(game.things[1], 8, -8))
+table.insert(game.things, turret.newturret(game.things[1], 8, 8))
 game.things[1].hp = 1000
 game.things[1].hpmax = 1000
 	

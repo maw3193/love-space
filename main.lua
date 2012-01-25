@@ -168,6 +168,7 @@ function love.load()
 
 			for k,v in pairs(game.things) do
 				if v.shape:testPoint(selend.x, selend.y) then  --v is target
+					if v.parent then v = v.parent end --Right-clicking a turret targets its parent instead.
 					clickedthing = true
 					for k2,v2 in pairs (game.selected) do --v2 is actor
 						if v2 ~= v and v2.team == ui.team then
