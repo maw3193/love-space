@@ -16,13 +16,9 @@ function love.load()
 	game.things = {}
 	game.selected = {}
 	game.manualship = nil
-	game.worldminx = -500
-	game.worldminy = -500
-	game.worldmaxx = 500
-	game.worldmaxy = 500
+	game.paused = false
 	game.wallthickness = 100
 	game.worldemptyoutside = 100
-	game.paused = false
 
 	game.collgroups = {}
 	game.collgroups.walls = 1
@@ -35,41 +31,30 @@ function love.load()
 	game.selstartx = 0
 	game.selstarty = 0
 	game.mousepressed = false
-
-	game.world = love.physics.newWorld(game.worldminx - game.wallthickness - game.worldemptyoutside,game.worldminy - game.wallthickness - game.worldemptyoutside,game.worldmaxx + game.wallthickness + game.worldemptyoutside,game.worldmaxy + game.wallthickness + game.worldemptyoutside)
-	game.world:setCallbacks(add, persist, rem)
-
-	game.static = love.physics.newBody(game.world,0,0,0,0)
-	game.topwall = love.physics.newRectangleShape(game.static, 0, game.worldminy - game.wallthickness/2 + 1, game.worldmaxx - game.worldminx + game.wallthickness * 2 - 2, game.wallthickness - 1, 0)
-	game.leftwall = love.physics.newRectangleShape(game.static, game.worldminx - game.wallthickness/2+1, 0, game.wallthickness - 1, game.worldmaxy - game.worldminy + game.wallthickness * 2 - 2, 0)
-	game.bottomwall = love.physics.newRectangleShape(game.static, 0, game.worldmaxy + game.wallthickness/2 - 1, game.worldmaxx - game.worldminx + game.wallthickness * 2 - 2, game.wallthickness - 1, 0)
-	game.rightwall = love.physics.newRectangleShape(game.static, game.worldmaxx + game.wallthickness/2 - 1, 0, game.wallthickness - 1, game.worldmaxy - game.worldminy + game.wallthickness*2 - 2, 0)
-	game.topwall:setData("wall")
-	game.bottomwall:setData("wall")
-	game.leftwall:setData("wall")
-	game.rightwall:setData("wall")
-	game.topwall:setFilterData(game.collgroups.walls, game.collgroups.ships, 0)
-	game.bottomwall:setFilterData(game.collgroups.walls, game.collgroups.ships, 0)
-	game.leftwall:setFilterData(game.collgroups.walls, game.collgroups.ships, 0)
-	game.rightwall:setFilterData(game.collgroups.walls, game.collgroups.ships, 0)
-
-	table.insert(game.things, ship.newship(50,50,1,16,"art/ship32.png", ui.blue, 1, "Blue 1"))
-	table.insert(game.things, ship.newship(0,-50,1,16,"art/ship32.png", ui.red, 2, "Red 1"))
-	game.manualship = game.things[1]
-	table.insert(game.things, turret.newturret(game.things[1]))
-	game.things[1].hp = 1000
-	game.things[1].hpmax = 1000
-	
 	game.cam = camera(vector(0,0),1,0)
 	game.cam:attach()
 
-	table.insert(ui.elements, game)
-	table.insert(ui.elements, panels.newpanel())
-	ui.elements[2]:addelement(panel_elements.newtextbox(ui.elements[2], 0, 0, "Spawn ship", _, "center", ui.largefont))
-	ui.elements[2]:addelement(panel_elements.newbutton(ui.elements[2], 0, 16, 50, 84, "", "art/ship32.png", _, false, _, ship.randomenemy))
-	ui.elements[2].elements[2].iconcol = ui.red
-	ui.elements[2]:addelement(panel_elements.newbutton(ui.elements[2],50, 16, 50, 84, "", "art/ship32.png", _, false, _, ship.randomfriend))
-	ui.elements[2].elements[3].iconcol = ui.blue
+	game.startscenario = "scenarios/testscenario.lua"
+
+	function game.makeworld()
+		game.world = love.physics.newWorld(game.worldminx - game.wallthickness - game.worldemptyoutside,game.worldminy - game.wallthickness - game.worldemptyoutside,game.worldmaxx + game.wallthickness + game.worldemptyoutside,game.worldmaxy + game.wallthickness + game.worldemptyoutside)
+		game.world:setCallbacks(add, persist, rem)
+		game.static = love.physics.newBody(game.world,0,0,0,0)
+		game.topwall = love.physics.newRectangleShape(game.static, 0, game.worldminy - game.wallthickness/2 + 1, game.worldmaxx - game.worldminx + game.wallthickness * 2 - 2, game.wallthickness - 1, 0)
+		game.leftwall = love.physics.newRectangleShape(game.static, game.worldminx - game.wallthickness/2+1, 0, game.wallthickness - 1, game.worldmaxy - game.worldminy + game.wallthickness * 2 - 2, 0)
+		game.bottomwall = love.physics.newRectangleShape(game.static, 0, game.worldmaxy + game.wallthickness/2 - 1, game.worldmaxx - game.worldminx + game.wallthickness * 2 - 2, game.wallthickness - 1, 0)
+		game.rightwall = love.physics.newRectangleShape(game.static, game.worldmaxx + game.wallthickness/2 - 1, 0, game.wallthickness - 1, game.worldmaxy - game.worldminy + game.wallthickness*2 - 2, 0)
+		game.topwall:setData("wall")
+		game.bottomwall:setData("wall")
+		game.leftwall:setData("wall")
+		game.rightwall:setData("wall")
+		game.topwall:setFilterData(game.collgroups.walls, game.collgroups.ships, 0)
+		game.bottomwall:setFilterData(game.collgroups.walls, game.collgroups.ships, 0)
+		game.leftwall:setFilterData(game.collgroups.walls, game.collgroups.ships, 0)
+		game.rightwall:setFilterData(game.collgroups.walls, game.collgroups.ships, 0)
+	end
+
+	dofile(game.startscenario)
 
 	--[[
 	local modes = love.graphics.getModes()

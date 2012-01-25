@@ -1,0 +1,28 @@
+local ship = require"ship.lua"
+local ui = require"ui.lua"
+local panels = require"panels.lua"
+local panel_elements = require"panel_elements.lua"
+local turret = require"turret.lua"
+
+game.worldminx = -500
+game.worldminy = -500
+game.worldmaxx = 500
+game.worldmaxy = 500
+
+game.makeworld()
+
+table.insert(game.things, ship.newship(50,50,1,16,"art/ship32.png", ui.blue, 1, "Blue 1"))
+table.insert(game.things, ship.newship(0,-50,1,16,"art/ship32.png", ui.red, 2, "Red 1"))
+game.manualship = game.things[1]
+table.insert(game.things, turret.newturret(game.things[1]))
+game.things[1].hp = 1000
+game.things[1].hpmax = 1000
+	
+table.insert(ui.elements, game)
+table.insert(ui.elements, panels.newpanel())
+ui.elements[2]:addelement(panel_elements.newtextbox(ui.elements[2], 0, 0, "Spawn ship", _, "center", ui.largefont))
+ui.elements[2]:addelement(panel_elements.newbutton(ui.elements[2], 0, 16, 50, 84, "", "art/ship32.png", _, false, _, ship.randomenemy))
+ui.elements[2].elements[2].iconcol = ui.red
+ui.elements[2]:addelement(panel_elements.newbutton(ui.elements[2],50, 16, 50, 84, "", "art/ship32.png", _, false, _, ship.randomfriend))
+ui.elements[2].elements[3].iconcol = ui.blue
+

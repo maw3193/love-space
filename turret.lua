@@ -14,7 +14,7 @@ local turrettemplate = {
 	isalive = true,
 	target = nil,
 	torque = 10,
-	angdamp = 5,
+	angdamp = 2,
 	-- fire rate limiter code
 	fireinterval = 1,
 	firecharge = 0,
