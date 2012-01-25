@@ -8,7 +8,7 @@ Currently implemented:
 *When a ship is manually-controlled, the camera follows it. Can be disabled by setting ui.followmanualship to false.
 *All ships can be selected by click or lasoo drag
 *Ships can be given orders by right-clicking. On empty space to give move order, on a ship to make it follow
-*1 draggable panel with a button that spawns more enemy ships.
+*1 draggable panel with buttons to spawn more ships.
 *All ships have a sensor radius at which they are aware of other ships.
 *Rudimentary AI in ships allows them to fire at hostile ships.
 *Primitive turrets that attach to ships with joints.
