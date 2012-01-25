@@ -5,6 +5,7 @@ Currently implemented:
 *Camera controlled by cursor keys for movement and NUM+, NUM-, NUM_ENTER for zoom.
 *2 ships belonging to opposing teams. Ships on the same team do not collide with each other.
 *Take manual control of a ship by selecting it and pressing 'm', can move it with WASD and fire bullets with space
+*When a ship is manually-controlled, the camera follows it. Can be disabled by setting ui.followmanualship to false.
 *All ships can be selected by click or lasoo drag
 *Ships can be given orders by right-clicking. On empty space to give move order, on a ship to make it follow
 *1 draggable panel with a button that spawns more enemy ships.
