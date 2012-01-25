@@ -54,7 +54,6 @@ function love.load()
 	game.rightwall:setFilterData(game.collgroups.walls, game.collgroups.ships, 0)
 
 	table.insert(game.things, ship.newship(50,50,1,16,"art/ship32.png", ui.blue, 1, "Blue 1"))
-	table.insert(game.things, ship.newship(-50,50,1,16,"art/ship32.png", ui.blue, 1, "Blue 2"))
 	table.insert(game.things, ship.newship(0,-50,1,16,"art/ship32.png", ui.red, 2, "Red 1"))
 	game.manualship = game.things[1]
 	table.insert(game.things, turret.newturret(game.things[1]))
@@ -86,6 +85,13 @@ function love.load()
 	function game:drawselected()
 		for k,v in pairs(self.selected) do
 			v:drawselected()
+		end
+	end
+	function game:camupdate(dt)
+		if game.manualship and ui.followmanualship then
+			game.cam.pos.x = game.manualship.body:getX()
+			game.cam.pos.y = game.manualship.body:getY()
+			game.cam.rot = -game.manualship.body:getAngle() - math.pi/2
 		end
 	end
 	function game:drawwalls()
@@ -216,44 +222,46 @@ end
 
 function love.update(dt)
 	ui:update(dt)
+	game:camupdate(dt)
 	local camspeed = 100
 	local turnspeed = 1000
-
-	if love.keyboard.isDown("left") then
-		local vx = camspeed*dt*math.sin(game.cam.rot-math.pi/2)/game.cam.zoom
-		local vy = camspeed*dt*math.cos(game.cam.rot-math.pi/2)/game.cam.zoom
-		game.cam:move(vx, vy)
+	if not (game.manualship and ui.followmanualship) then
+		if love.keyboard.isDown("left") then
+			local vx = camspeed*dt*math.sin(game.cam.rot-math.pi/2)/game.cam.zoom
+			local vy = camspeed*dt*math.cos(game.cam.rot-math.pi/2)/game.cam.zoom
+			game.cam:move(vx, vy)
+		end
+		if love.keyboard.isDown("right") then
+			local vx = -camspeed*dt*math.sin(game.cam.rot-math.pi/2)/game.cam.zoom
+			local vy = -camspeed*dt*math.cos(game.cam.rot-math.pi/2)/game.cam.zoom
+			game.cam:move(vx, vy)
+		end
+		if love.keyboard.isDown("up") then
+			local vx = -camspeed*dt*math.sin(game.cam.rot)/game.cam.zoom
+			local vy = -camspeed*dt*math.cos(game.cam.rot)/game.cam.zoom
+			game.cam:move(vx, vy)
+		end
+		if love.keyboard.isDown("down") then
+			local vx = camspeed*dt*math.sin(game.cam.rot)/game.cam.zoom
+			local vy = camspeed*dt*math.cos(game.cam.rot)/game.cam.zoom
+			game.cam:move(vx, vy)
+		end
+		if love.keyboard.isDown("e") then
+			game.cam:rotate(dt*0.5)
+		end
+		if love.keyboard.isDown("q") then
+			game.cam:rotate(-dt*0.5)
+		end
 	end
-	if love.keyboard.isDown("right") then
-		local vx = -camspeed*dt*math.sin(game.cam.rot-math.pi/2)/game.cam.zoom
-		local vy = -camspeed*dt*math.cos(game.cam.rot-math.pi/2)/game.cam.zoom
-		game.cam:move(vx, vy)
-	end
-	if love.keyboard.isDown("up") then
-		local vx = -camspeed*dt*math.sin(game.cam.rot)/game.cam.zoom
-		local vy = -camspeed*dt*math.cos(game.cam.rot)/game.cam.zoom
-		game.cam:move(vx, vy)
-	end
-	if love.keyboard.isDown("down") then
-		local vx = camspeed*dt*math.sin(game.cam.rot)/game.cam.zoom
-		local vy = camspeed*dt*math.cos(game.cam.rot)/game.cam.zoom
-		game.cam:move(vx, vy)
+	if love.keyboard.isDown("kpenter") then
+		game.cam.zoom = 1
+		game.cam.rot = 0
 	end
 	if love.keyboard.isDown("kp+") then
 		game.cam.zoom = game.cam.zoom + game.cam.zoom*dt
 	end
 	if love.keyboard.isDown("kp-") then
 		game.cam.zoom = game.cam.zoom - game.cam.zoom*dt
-	end
-	if love.keyboard.isDown("kpenter") then
-		game.cam.zoom = 1
-		game.cam.rot = 0
-	end
-	if love.keyboard.isDown("e") then
-		game.cam:rotate(dt*0.5)
-	end
-	if love.keyboard.isDown("q") then
-		game.cam:rotate(-dt*0.5)
 	end
 
 

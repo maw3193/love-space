@@ -25,6 +25,7 @@ local ui = {
 	font14 = nil,
 	elements = {},
 	team = 1,
+	followmanualship = true,
 	clickdown = function(self, x, y, button)
 		local endpoint = table.maxn(self.elements)
 		local current = endpoint
