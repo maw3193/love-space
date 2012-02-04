@@ -1,8 +1,8 @@
-local ship = require"ship.lua"
-local ui = require"ui.lua"
-local panels = require"panels.lua"
-local panel_elements = require"panel_elements.lua"
-local turret = require"turret.lua"
+local ship = require"ship"
+local ui = require"ui"
+local panels = require"panels"
+local panel_elements = require"panel_elements"
+local turret = require"turret"
 
 game.worldminx = -500
 game.worldminy = -500

@@ -1,4 +1,4 @@
-local ui = require"ui.lua"
+local ui = require"ui"
 local waypoint = {}
 
 local waypoint_template = {

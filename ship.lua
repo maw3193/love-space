@@ -1,6 +1,6 @@
-local ui = require("ui.lua")
-local ai = require("ai.lua")
-local projectile = require("projectile.lua")
+local ui = require("ui")
+local ai = require("ai")
+local projectile = require("projectile")
 --Builds the ship prototype
 local ship = {}
 

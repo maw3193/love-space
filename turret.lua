@@ -1,6 +1,6 @@
 local turret = {}
-local ui = require"ui.lua"
-local projectile = require"projectile.lua"
+local ui = require"ui"
+local projectile = require"projectile"
 local turrettemplate = {
 	parent = nil, --Thing the turret is attached to
 	body = nil, --Turrets have a physical existence

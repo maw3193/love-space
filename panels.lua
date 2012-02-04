@@ -1,6 +1,6 @@
 local panels = {}
 
-local ui = require"ui.lua"
+local ui = require"ui"
 
 local paneltemplate = {
 	x = 0,

@@ -1,15 +1,15 @@
-local orders = require"orders.lua"
+local orders = require"orders"
 function love.load()
-	ui = require"ui.lua"
+	ui = require"ui"
 	camera = require"lib/camera"
 	vector = require"lib/vector"
-	local ship = require "ship.lua"
-	local waypoint = require "waypoint.lua"
-	local projectile = require "projectile.lua"
-	local panels = require "panels.lua"
-	local panel_elements = require"panel_elements.lua"
-	local turret = require"turret.lua"
-	require"inputcallbacks.lua"
+	local ship = require "ship"
+	local waypoint = require "waypoint"
+	local projectile = require "projectile"
+	local panels = require "panels"
+	local panel_elements = require"panel_elements"
+	local turret = require"turret"
+	require"inputcallbacks"
 	love.graphics.setLineWidth(1.5)
 
 	game = {}
@@ -54,7 +54,7 @@ function love.load()
 		game.rightwall:setFilterData(game.collgroups.walls, game.collgroups.ships, 0)
 	end
 
-	dofile(game.startscenario)
+	love.filesystem.load(game.startscenario)()
 
 	--[[
 	local modes = love.graphics.getModes()

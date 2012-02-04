@@ -1,5 +1,5 @@
 local ai = {}
-orders = require"orders.lua"
+orders = require"orders"
 
 ai.standard = {
 	update = function(self, ship, dt)

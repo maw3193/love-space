@@ -1,7 +1,7 @@
-local ui = require "ui.lua"
-local waypoint = require "waypoint.lua"
-local orders = require "orders.lua"
-local projectile = require "projectile.lua"
+local ui = require "ui"
+local waypoint = require "waypoint"
+local orders = require "orders"
+local projectile = require "projectile"
 function love.keypressed(key)
 
 end

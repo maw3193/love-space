@@ -1,7 +1,7 @@
 local panel_elements = {}
 
-local ui = require"ui.lua"
-local panels = require"panels.lua"
+local ui = require"ui"
+local panels = require"panels"
 
 local textboxtemplate = {
 	panel = nil, --the panel it belongs to, can't set in constructor.
